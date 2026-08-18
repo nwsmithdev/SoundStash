@@ -1,9 +1,11 @@
 import styles from "./Playlist.module.css";
+import TrackList from "../TrackList/TrackList.jsx";
 
-function Playlist() {
+function Playlist(props) {
   return (
     <>
-      <h3>Playlist</h3>
+      <h3>{props.name}</h3>
+      <TrackList tracks={props.trackListing} />
     </>
   );
 }
