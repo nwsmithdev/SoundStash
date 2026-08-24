@@ -1,8 +1,11 @@
+import { useState } from "react";
 import SearchBar from "../SearchBar/SearchBar.jsx";
 import SearchResults from "../SearchResults/SearchResults.jsx";
 import Playlist from "../Playlist/Playlist.jsx";
 
 function App() {
+  const [playlistTracks, setPlaylistTracks] = useState([]);
+
   const tracksArr = [
     {
       title: "Hawaii Song",
@@ -24,28 +27,34 @@ function App() {
     },
   ];
 
+  const addTrack = (track) => {
+    const isAlreadyAdded = playlistTracks.some(
+      (existingTrack) => existingTrack.id === track.id,
+    );
+    if (!isAlreadyAdded) {
+      setPlaylistTracks([...playlistTracks, track]);
+    }
+  };
+
+  const removeTrack = (track) => {
+    const updatedTracks = playlistTracks.filter(
+      (existingTrack) => existingTrack.id !== track.id,
+    );
+    setPlaylistTracks(updatedTracks);
+  };
+
   const playlistName = "My Playlist";
-  const playlistTracks = [
-    {
-      title: "Hawaii Song",
-      artist: "Stick Figure",
-      album: "Smoke Stack",
-      id: "01",
-    },
-    {
-      title: "The Middle",
-      artist: "Jimmy Eat World",
-      album: "Bleed American",
-      id: "02",
-    },
-  ];
 
   return (
     <>
       <h1>SoundStash</h1>
       <SearchBar />
-      <SearchResults tracks={tracksArr} />
-      <Playlist name={playlistName} trackListing={playlistTracks} />
+      <SearchResults tracks={tracksArr} addTrack={addTrack} />
+      <Playlist
+        name={playlistName}
+        trackListing={playlistTracks}
+        removeTrack={removeTrack}
+      />
     </>
   );
 }
