@@ -5,6 +5,7 @@ import Playlist from "../Playlist/Playlist.jsx";
 
 function App() {
   const [playlistTracks, setPlaylistTracks] = useState([]);
+  const [playlistName, setPlaylistName] = useState("My Playlist");
 
   const tracksArr = [
     {
@@ -43,7 +44,7 @@ function App() {
     setPlaylistTracks(updatedTracks);
   };
 
-  const playlistName = "My Playlist";
+  const updatePlaylist = (newName) => setPlaylistName(newName);
 
   return (
     <>
@@ -54,6 +55,7 @@ function App() {
         name={playlistName}
         trackListing={playlistTracks}
         removeTrack={removeTrack}
+        updatePlaylist={updatePlaylist}
       />
     </>
   );
