@@ -7,7 +7,7 @@ function Playlist(props) {
       <input
         type="text"
         value={props.name}
-        aria-lable="Playlist Name"
+        aria-label="Playlist Name"
         onChange={(e) => props.updatePlaylist(e.target.value)}
       />
       <TrackList
@@ -15,6 +15,7 @@ function Playlist(props) {
         isPlaylistTrack={true}
         removeTrack={props.removeTrack}
       />
+      <button onClick={props.savePlaylist}>Save Playlist</button>
     </>
   );
 }
