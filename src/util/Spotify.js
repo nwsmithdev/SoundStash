@@ -1,8 +1,9 @@
+// Spotify app config and permissions required by SoundStash
 const clientID = "f7737228c1344be88576076d6347d5d1";
 const redirectURI = "http://127.0.0.1:5173/";
 const scope = "playlist-modify-public playlist-modify-private";
 
-// function to generate a random string by taking an array of a specfied length, mapping through that array, and replacing the corresponding element with a randomized letter or number picked from 'Possible'
+// Generates a secure random string for PKCE verification and OAuth state
 const generateRandomString = (length) => {
   const possible =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -15,8 +16,8 @@ const generateRandomString = (length) => {
   return randomizedArr.join("");
 };
 
-// this variable calls the generateRandomString function with a specified length
-
+// Creates a PKCE code challenge by hashing the verifier with SHA-256
+// converts the result to URL-safe Base64
 const createCodeChallenge = async (codeVerifier) => {
   const encoder = new TextEncoder();
   const encodedResult = encoder.encode(codeVerifier);
@@ -31,11 +32,13 @@ const createCodeChallenge = async (codeVerifier) => {
   return urlFinalChallenge;
 };
 
+// Starts Spotify auth using PKCE and redirects the user to Spotify to grand SoundStash access
 const redirectToSpotifyAuth = async () => {
   const codeVerifier = generateRandomString(64);
   const codeChallenge = await createCodeChallenge(codeVerifier);
-  sessionStorage.setItem("code_verifier", codeVerifier);
 
+  // Store the verifier and state so they can be validated after redirect
+  sessionStorage.setItem("code_verifier", codeVerifier);
   const state = generateRandomString(16);
   sessionStorage.setItem("state", state);
 
@@ -56,4 +59,51 @@ const redirectToSpotifyAuth = async () => {
   window.location.assign(authUrl);
 };
 
+// Handles Spotify's auth callback, validates the request, and exchanges the auth code for an access token
+const handleSpotifyCallback = async () => {
+  //prevents auth code from being exchanged more than 1x
+  if (sessionStorage.getItem("spotify_callback_handled")) {
+    return;
+  }
+
+  console.log("handleSpotifyCallback started...");
+  const params = new URLSearchParams(window.location.search);
+  const code = params.get("code");
+  const state = params.get("state");
+  const storedState = sessionStorage.getItem("state");
+  // Verifies that the returned OAuth state matches state created before auth
+  if (state !== storedState) {
+    console.log("The states do not match");
+    return;
+  }
+  const codeVerifier = sessionStorage.getItem("code_verifier");
+  if (!code || !codeVerifier) {
+    console.log("Code and CodeVerifier do not exist");
+    return;
+  }
+
+  sessionStorage.setItem("spotify_callback_handled", "true");
+
+  // Exchange the auth code and PKCE verifier for Spotify access tokens
+  const tokens = new URLSearchParams({
+    grant_type: "authorization_code",
+    code,
+    redirect_uri: redirectURI,
+    client_id: clientID,
+    code_verifier: codeVerifier,
+  });
+
+  const response = await fetch("https://accounts.spotify.com/api/token", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body: tokens,
+  });
+
+  const data = await response.json();
+  console.log("Spotify token response:", data);
+};
+
+export { handleSpotifyCallback };
 export default redirectToSpotifyAuth;

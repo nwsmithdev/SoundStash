@@ -1,12 +1,23 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import SearchBar from "../SearchBar/SearchBar.jsx";
 import SearchResults from "../SearchResults/SearchResults.jsx";
 import Playlist from "../Playlist/Playlist.jsx";
-import redirectToSpotifyAuth from "../../util/Spotify.js";
+import redirectToSpotifyAuth, {
+  handleSpotifyCallback,
+} from "../../util/Spotify.js";
 
 function App() {
   const [playlistTracks, setPlaylistTracks] = useState([]);
   const [playlistName, setPlaylistName] = useState("My Playlist");
+  useEffect(() => {
+    console.log("App useEffect ran");
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get("code");
+    console.log("code from url:", code);
+    if (code) {
+      handleSpotifyCallback();
+    }
+  }, []);
 
   const tracksArr = [
     {
