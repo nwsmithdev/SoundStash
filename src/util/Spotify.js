@@ -102,8 +102,55 @@ const handleSpotifyCallback = async () => {
   });
 
   const data = await response.json();
-  console.log("Spotify token response:", data);
+  if (!response.ok) {
+    console.error("Spotify token request failed", response.status, data);
+    return;
+  }
+
+  sessionStorage.setItem("access_token", data.access_token);
 };
 
-export { handleSpotifyCallback };
+const searchTracks = async (searchTerm) => {
+  const accessToken = sessionStorage.getItem("access_token");
+  if (!accessToken) {
+    console.error("There was an error retrieving your Spotify token");
+    return;
+  }
+
+  const params = new URLSearchParams({
+    q: searchTerm,
+    type: "track",
+  });
+
+  const searchEndpoint = "https://api.spotify.com/v1/search";
+  const queryParams = params.toString();
+  const searchUrl = `${searchEndpoint}?${queryParams}`;
+
+  const search = await fetch(searchUrl, {
+    method: "GET",
+    headers: {
+      Authorization: "Bearer " + accessToken,
+    },
+  });
+
+  if (!search.ok) {
+    console.error("Spotify search failed", search.status);
+    return;
+  }
+
+  const data = await search.json();
+
+  const formattedTracks = data.tracks.items.map((item) => {
+    return {
+      id: item.id,
+      title: item.name,
+      artist: item.artists[0].name,
+      album: item.album.name,
+      uri: item.uri,
+    };
+  });
+  return formattedTracks;
+};
+
+export { handleSpotifyCallback, searchTracks };
 export default redirectToSpotifyAuth;

@@ -4,6 +4,7 @@ import SearchResults from "../SearchResults/SearchResults.jsx";
 import Playlist from "../Playlist/Playlist.jsx";
 import redirectToSpotifyAuth, {
   handleSpotifyCallback,
+  searchTracks,
 } from "../../util/Spotify.js";
 
 function App() {
@@ -19,7 +20,7 @@ function App() {
     }
   }, []);
 
-  const tracksArr = [
+  const [tracksArr, setTracksArr] = useState([
     {
       title: "Hawaii Song",
       artist: "Stick Figure",
@@ -41,7 +42,14 @@ function App() {
       id: "03",
       uri: "",
     },
-  ];
+  ]);
+
+  const searchSpotify = async (searchTerm) => {
+    const searchResults = await searchTracks(searchTerm);
+    if (Array.isArray(searchResults)) {
+      setTracksArr(searchResults);
+    }
+  };
 
   const addTrack = (track) => {
     const isAlreadyAdded = playlistTracks.some(
@@ -74,7 +82,7 @@ function App() {
     <>
       <h1>SoundStash</h1>
       <button onClick={redirectToSpotifyAuth}>Connect to Spotify</button>
-      <SearchBar />
+      <SearchBar searchSpotify={searchSpotify} />
       <SearchResults tracks={tracksArr} addTrack={addTrack} />
       <Playlist
         name={playlistName}
