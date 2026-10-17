@@ -5,6 +5,7 @@ import Playlist from "../Playlist/Playlist.jsx";
 import redirectToSpotifyAuth, {
   handleSpotifyCallback,
   searchTracks,
+  savePlaylistToSpotify,
 } from "../../util/Spotify.js";
 
 function App() {
@@ -71,11 +72,14 @@ function App() {
 
   const updatePlaylist = (newName) => setPlaylistName(newName);
 
-  const savePlaylist = () => {
+  const savePlaylist = async () => {
     console.log(playlistName);
     console.log(trackURIs);
-    setPlaylistName("My Playlist");
-    setPlaylistTracks([]);
+    const saveResult = await savePlaylistToSpotify(playlistName, trackURIs);
+    if (saveResult) {
+      setPlaylistName("My Playlist");
+      setPlaylistTracks([]);
+    }
   };
 
   return (

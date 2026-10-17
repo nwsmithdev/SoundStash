@@ -34,6 +34,8 @@ const createCodeChallenge = async (codeVerifier) => {
 
 // Starts Spotify auth using PKCE and redirects the user to Spotify to grand SoundStash access
 const redirectToSpotifyAuth = async () => {
+  sessionStorage.removeItem("spotify_callback_handled");
+
   const codeVerifier = generateRandomString(64);
   const codeChallenge = await createCodeChallenge(codeVerifier);
 
@@ -152,5 +154,110 @@ const searchTracks = async (searchTerm) => {
   return formattedTracks;
 };
 
-export { handleSpotifyCallback, searchTracks };
+const getSpotifyUserID = async () => {
+  const accessToken = sessionStorage.getItem("access_token");
+  if (!accessToken) {
+    console.error("There was an error retrieving your Spotify access token");
+    return;
+  }
+  const response = await fetch("https://api.spotify.com/v1/me", {
+    method: "GET",
+    headers: {
+      Authorization: "Bearer " + accessToken,
+    },
+  });
+  if (!response.ok) {
+    console.error("Spotify user profile request failed", response.status);
+    return;
+  }
+  const data = await response.json();
+  return data.id;
+};
+
+const createSpotifyPlaylist = async (userID, playlistName) => {
+  const accessToken = sessionStorage.getItem("access_token");
+  if (!accessToken) {
+    console.error("There was an error retrieving your Spotify access token");
+    return;
+  }
+
+  const playlistURL = `https://api.spotify.com/v1/me/playlists`;
+  const response = await fetch(playlistURL, {
+    method: "POST",
+    headers: {
+      Authorization: "Bearer " + accessToken,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      name: playlistName,
+    }),
+  });
+
+  if (!response.ok) {
+    console.error(
+      "There was an error creating your Spotify playlist",
+      response.status,
+    );
+    return;
+  }
+
+  const data = await response.json();
+  return data.id;
+};
+
+const addTracksToPlaylist = async (playlistID, trackURIs) => {
+  const accessToken = sessionStorage.getItem("access_token");
+  if (!accessToken) {
+    console.error("There was an error retrieving your Spotify access token");
+    return;
+  }
+  const addTracksURL = `https://api.spotify.com/v1/playlists/${playlistID}/items`;
+  const response = await fetch(addTracksURL, {
+    method: "POST",
+    headers: {
+      Authorization: "Bearer " + accessToken,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      uris: trackURIs,
+    }),
+  });
+
+  if (!response.ok) {
+    console.error(
+      "There was a problem adding tracks to your Spotify playlist",
+      response.status,
+    );
+    return;
+  }
+
+  return true;
+};
+
+const savePlaylistToSpotify = async (playlistName, trackURIs) => {
+  const userID = await getSpotifyUserID();
+  if (!userID) {
+    console.error("There was an issue loading your Spotify ID");
+    return;
+  }
+  const playlistID = await createSpotifyPlaylist(userID, playlistName);
+  if (!playlistID) {
+    console.error("Spotify was unable to create this playlist");
+    return;
+  }
+  const tracksAdded = await addTracksToPlaylist(playlistID, trackURIs);
+  if (!tracksAdded) {
+    console.error("Spotify was unable to add the selected tracks");
+    return;
+  }
+
+  return true;
+};
+
+export {
+  handleSpotifyCallback,
+  searchTracks,
+  getSpotifyUserID,
+  savePlaylistToSpotify,
+};
 export default redirectToSpotifyAuth;
