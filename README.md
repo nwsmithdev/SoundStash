@@ -1,16 +1,58 @@
-# React + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# SoundStash 🎵
 
-Currently, two official plugins are available:
+SoundStash is a React application that allows users to search for songs on Spotify, create custom playlists, and save them directly to their Spotify account.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+I built this project as part of my journey learning React and working with APIs. It gave me the opportunity to get more comfortable with React components, state management, asynchronous JavaScript, and connecting an application to a real-world API.
 
-## React Compiler
+## Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Search for songs, artists, and albums using Spotify's API.
+- Add and remove songs from a custom playlist.
+- Prevent duplicate tracks from being added.
+- Give your playlist a custom name.
+- Save your playlist directly to your Spotify account.
+- Responsive design for desktop and mobile.
+- Loading indicators and feedback when saving playlists.
 
-## Expanding the ESLint configuration
+## Built With
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- React
+- JavaScript
+- HTML & CSS (CSS Modules)
+- Vite
+- Spotify Web API
+- Spotify OAuth 2.0 with PKCE
+
+## Running Locally
+
+1. Clone the repository.
+2. Install dependencies:
+
+   npm install
+
+3. Create an application in the [Spotify Developer Dashboard](https://developer.spotify.com/dashboard).
+4. Configure your Spotify Client ID and redirect URI in `src/util/Spotify.js`.
+5. Add `http://127.0.0.1:5173/` as an allowed redirect URI in your Spotify application settings.
+6. Start the development server:
+
+   npm run dev -- --host 127.0.0.1
+
+7. Open the local URL and connect your Spotify account.
+
+**Note:** Spotify API access may depend on your application's development-mode settings and authorized users.
+
+## What I Learned
+
+This project helped me better understand how React components communicate, how to manage state, and how to work with asynchronous API requests.
+
+One of the bigger challenges was implementing Spotify authentication and getting the different API requests to work together when creating and saving playlists.
+
+There are still a few things I'd like to improve down the road, but I'm happy with where the project ended up and what I learned while building it.
+
+## Future Improvements
+
+- Automatic Spotify access token refresh.
+- Display album artwork alongside tracks.
+- Additional error handling and user feedback.
+
