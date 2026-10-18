@@ -1,0 +1,133 @@
+
+.track {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  min-width: 0;
+  padding: 14px;
+  background: var(--surface-hover);
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.track:hover {
+  background: #303540;
+  border-color: var(--border);
+}
+
+/* Artwork placeholder */
+
+.trackArtwork {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 46px;
+  height: 46px;
+  border-radius: var(--radius-sm);
+  background: #373d46;
+  color: var(--accent);
+  font-size: 1.5rem;
+}
+
+/* Track information */
+
+.trackInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.trackTitle {
+  margin: 0 0 4px;
+  color: var(--text-h);
+  font-size: 0.95rem;
+  font-weight: 650;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.trackDetails {
+  margin: 0;
+  color: var(--text);
+  font-size: 0.8rem;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+/* Add and remove buttons */
+
+.trackButton {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border-radius: 50%;
+  font-size: 1.3rem;
+  font-weight: 500;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.addButton {
+  background: var(--accent);
+  color: var(--bg);
+  border: 1px solid var(--accent);
+}
+
+.addButton:hover {
+  background: var(--accent-hover);
+  transform: scale(1.07);
+}
+
+.removeButton {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.removeButton:hover {
+  background: rgba(255, 110, 110, 0.12);
+  border-color: #f08080;
+  color: #f08080;
+  transform: scale(1.07);
+}
+
+/* Small screens */
+
+@media (max-width: 480px) {
+  .track {
+    padding: 12px;
+    gap: 10px;
+  }
+
+  .trackArtwork {
+    width: 40px;
+    height: 40px;
+  }
+
+  .trackTitle {
+    font-size: 0.88rem;
+  }
+
+  .trackDetails {
+    font-size: 0.75rem;
+  }
+
+  .trackButton {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .track,
+  .trackButton {
+    transition: none;
+  }
+
+  .trackButton:hover {
+    transform: none;
+  }
+}

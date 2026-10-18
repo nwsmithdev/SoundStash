@@ -1,0 +1,187 @@
+
+.playlist {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  width: 100%;
+}
+
+.heading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.heading h2 {
+  margin: 0;
+}
+
+.headingIcon {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  background: var(--accent-bg);
+  color: var(--accent);
+  font-size: 1.3rem;
+}
+
+.nameSection {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.nameLabel {
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.nameInput {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface-hover);
+  color: var(--text-h);
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.nameInput:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-bg);
+}
+
+/* Empty playlist */
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 190px;
+  padding: 28px 20px;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.015);
+  text-align: center;
+}
+
+.emptyIcon {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--surface-hover);
+  color: var(--accent);
+  font-size: 1.5rem;
+}
+
+.emptyTitle {
+  color: var(--text-h);
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.emptyDescription {
+  max-width: 260px;
+  color: var(--text);
+  font-size: 0.82rem;
+  line-height: 1.6;
+}
+
+/* Save button */
+
+.saveButton {
+  width: 100%;
+  padding: 15px 20px;
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-md);
+  background: var(--accent);
+  color: var(--bg);
+  font-size: 0.95rem;
+  font-weight: 700;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.saveButton:hover:not(:disabled) {
+  background: var(--accent-hover);
+  transform: translateY(-1px);
+}
+
+.saveButton:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.saveButton:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.saveButton:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .saveButton {
+    transition: none;
+  }
+
+  .saveButton:hover {
+    transform: none;
+  }
+}
+
+
+/* Playlist save confirmation */
+
+.saveMessage {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 14px 18px;
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.5;
+  animation: fadeIn 0.25s ease-out;
+}
+
+.success {
+  color: var(--accent);
+  background: var(--accent-bg);
+  border: 1px solid var(--accent-border);
+}
+
+.error {
+  color: #ff8585;
+  background: rgba(255, 105, 105, 0.1);
+  border: 1px solid rgba(255, 105, 105, 0.4);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .saveMessage {
+    animation: none;
+  }
+}
+

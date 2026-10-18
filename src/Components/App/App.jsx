@@ -1,3 +1,4 @@
+import styles from "./App.module.css";
 import { useState, useEffect } from "react";
 import SearchBar from "../SearchBar/SearchBar.jsx";
 import SearchResults from "../SearchResults/SearchResults.jsx";
@@ -11,6 +12,11 @@ import redirectToSpotifyAuth, {
 function App() {
   const [playlistTracks, setPlaylistTracks] = useState([]);
   const [playlistName, setPlaylistName] = useState("My Playlist");
+  const [isSearching, setIsSearching] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveMessage, setSaveMessage] = useState("");
+  const [saveStatus, setSaveStatus] = useState(null);
+
   useEffect(() => {
     console.log("App useEffect ran");
     const params = new URLSearchParams(window.location.search);
@@ -21,34 +27,17 @@ function App() {
     }
   }, []);
 
-  const [tracksArr, setTracksArr] = useState([
-    {
-      title: "Hawaii Song",
-      artist: "Stick Figure",
-      album: "Smoke Stack",
-      id: "01",
-      uri: "",
-    },
-    {
-      title: "The Middle",
-      artist: "Jimmy Eat World",
-      album: "Bleed American",
-      id: "02",
-      uri: "",
-    },
-    {
-      title: "My Way",
-      artist: "Frank Sinatra",
-      album: "Nothing But The Best (2008)",
-      id: "03",
-      uri: "",
-    },
-  ]);
+  const [tracksArr, setTracksArr] = useState([]);
 
   const searchSpotify = async (searchTerm) => {
-    const searchResults = await searchTracks(searchTerm);
-    if (Array.isArray(searchResults)) {
-      setTracksArr(searchResults);
+    setIsSearching(true);
+    try {
+      const searchResults = await searchTracks(searchTerm);
+      if (Array.isArray(searchResults)) {
+        setTracksArr(searchResults);
+      }
+    } finally {
+      setIsSearching(false);
     }
   };
 
@@ -73,29 +62,86 @@ function App() {
   const updatePlaylist = (newName) => setPlaylistName(newName);
 
   const savePlaylist = async () => {
-    console.log(playlistName);
-    console.log(trackURIs);
-    const saveResult = await savePlaylistToSpotify(playlistName, trackURIs);
-    if (saveResult) {
-      setPlaylistName("My Playlist");
-      setPlaylistTracks([]);
+    setSaveStatus(null);
+    setIsSaving(true);
+    setSaveMessage("");
+
+    try {
+      const saveResult = await savePlaylistToSpotify(playlistName, trackURIs);
+
+      if (saveResult) {
+        setPlaylistName("My Playlist");
+        setPlaylistTracks([]);
+        setSaveMessage("Playlist saved successfully! Your music is now available on Spotify.");
+        setSaveStatus("success");
+      } else {
+        setSaveMessage("Unable to save your playlist. Please try again.");
+        setSaveStatus("error");
+      }
+    } catch (error) {
+      console.error("Error saving Spotify playlist:", error);
+      setSaveMessage("Unable to save your playlist. Please try again.");
+      setSaveStatus("error");
+    } finally {
+      setIsSaving(false);
     }
   };
 
   return (
-    <>
-      <h1>SoundStash</h1>
-      <button onClick={redirectToSpotifyAuth}>Connect to Spotify</button>
-      <SearchBar searchSpotify={searchSpotify} />
-      <SearchResults tracks={tracksArr} addTrack={addTrack} />
-      <Playlist
-        name={playlistName}
-        trackListing={playlistTracks}
-        removeTrack={removeTrack}
-        updatePlaylist={updatePlaylist}
-        savePlaylist={savePlaylist}
-      />
-    </>
+    <div className={styles.app}>
+    <header className={styles.header}>
+      <div className={styles.brand}>
+        <div className={styles.brandIcon}>♫</div>
+        <h1>SoundStash</h1>
+      </div>
+
+      <button
+        className={styles.connectButton}
+        onClick={redirectToSpotifyAuth}
+      >
+        Connect to Spotify
+      </button>
+    </header>
+
+    <section className={styles.intro}>
+      <p className={styles.eyebrow}>YOUR MUSIC, YOUR WAY</p>
+      <h2>Your music. Your mix.</h2>
+      <p>
+        Find your favorite tracks, create your perfect mix,
+        and save it directly to Spotify.
+      </p>
+    </section>
+
+    <section className={styles.searchSection}>
+      <SearchBar searchSpotify={searchSpotify} isSearching={isSearching}/>
+    </section>
+
+      <main className={styles.content}>
+        <section className={styles.resultsPanel}>
+          <SearchResults
+            tracks={tracksArr}
+            addTrack={addTrack}
+          />
+        </section>
+
+        <section className={styles.playlistPanel}>
+          <Playlist
+            name={playlistName}
+            trackListing={playlistTracks}
+            removeTrack={removeTrack}
+            updatePlaylist={updatePlaylist}
+            savePlaylist={savePlaylist}
+            isSaving={isSaving}
+            saveMessage={saveMessage}
+            saveStatus={saveStatus}
+          />
+        </section>
+      </main>
+
+      <footer className={styles.footer}>
+        Built with React and the Spotify Web API.
+      </footer>
+    </div>
   );
 }
 

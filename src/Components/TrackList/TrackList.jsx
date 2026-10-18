@@ -1,9 +1,10 @@
+
 import styles from "./TrackList.module.css";
 import Track from "../Track/Track.jsx";
 
 function TrackList(props) {
   return (
-    <>
+    <div className={styles.trackList}>
       {props.tracks.map((track) => {
         return (
           <Track
@@ -15,8 +16,9 @@ function TrackList(props) {
           />
         );
       })}
-    </>
+    </div>
   );
 }
 
 export default TrackList;
+

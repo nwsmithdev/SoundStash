@@ -1,0 +1,41 @@
+.resultsHeading {
+  margin-bottom: 20px;
+}
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 240px;
+  padding: 32px 20px;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.015);
+  text-align: center;
+}
+
+.emptyIcon {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--surface-hover);
+  color: var(--accent);
+  font-size: 1.7rem;
+}
+
+.emptyTitle {
+  color: var(--text-h);
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.emptyDescription {
+  max-width: 300px;
+  color: var(--text);
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
