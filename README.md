@@ -1,17 +1,17 @@
 
-# SoundStash 🎵
+# SoundStash
 
 SoundStash is a React application that allows users to search for songs on Spotify, create custom playlists, and save them directly to their Spotify account.
 
-I built this project as part of my journey learning React and working with APIs. It gave me the opportunity to get more comfortable with React components, state management, asynchronous JavaScript, and connecting an application to a real-world API.
+I built this project as part of my journey learning React and working with APIs. It allowed me to get more comfortable with components, state management, async JS, and connecting an app to an API.
 
 ## Features
 
 - Search for songs, artists, and albums using Spotify's API.
 - Add and remove songs from a custom playlist.
 - Prevent duplicate tracks from being added.
-- Give your playlist a custom name.
-- Save your playlist directly to your Spotify account.
+- Custom naming for Spotify playlists.
+- Playlist saving functionality.
 - Responsive design for desktop and mobile.
 - Loading indicators and feedback when saving playlists.
 
@@ -44,11 +44,11 @@ I built this project as part of my journey learning React and working with APIs.
 
 ## What I Learned
 
-This project helped me better understand how React components communicate, how to manage state, and how to work with asynchronous API requests.
+This project helped me better understand how React components communicate, how to manage state, and how to work with async API requests.
 
 One of the bigger challenges was implementing Spotify authentication and getting the different API requests to work together when creating and saving playlists.
 
-There are still a few things I'd like to improve down the road, but I'm happy with where the project ended up and what I learned while building it.
+There are still a few things I'd like to improve upon, but overall, I'm happy with where the project ended up and what I learned while building it.
 
 ## Future Improvements
 
